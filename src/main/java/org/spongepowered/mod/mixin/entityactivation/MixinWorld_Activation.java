@@ -25,6 +25,7 @@
 package org.spongepowered.mod.mixin.entityactivation;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
@@ -44,6 +45,7 @@ import org.spongepowered.common.mixin.plugin.entityactivation.interfaces.IModDat
 public abstract class MixinWorld_Activation implements IMixinWorld {
 
     @Shadow @Final public boolean isRemote;
+    @Shadow @Final public Profiler profiler;
 
     @Shadow protected abstract boolean isChunkLoaded(int x, int z, boolean allowEmpty);
     @Shadow public abstract Chunk getChunkFromChunkCoords(int chunkX, int chunkZ);
@@ -89,7 +91,7 @@ public abstract class MixinWorld_Activation implements IMixinWorld {
             }
         }
 
-        //this.theProfiler.startSection("chunkCheck");
+        this.profiler.startSection("chunkCheck");
 
         if (Double.isNaN(entityIn.posX) || Double.isInfinite(entityIn.posX))
         {
@@ -141,7 +143,7 @@ public abstract class MixinWorld_Activation implements IMixinWorld {
             }
         }
 
-        //this.theProfiler.endSection();
+        this.profiler.endSection();
 
         if (forceUpdate && entityIn.addedToChunk)
         {
